@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dev Patel — Portfolio</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Basic styles -->
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#2f9cff;
+      --glass: rgba(255,255,255,0.04);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Poppins',system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:linear-gradient(180deg,#071026 0%, #0f1724 100%);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
+    }
+
+    /* Preloader */
+    #preloader{
+      position:fixed; inset:0; display:grid; place-items:center; background:var(--bg); z-index:9999;
+    }
+    .spinner{width:72px;height:72px;border-radius:12px; background:linear-gradient(135deg,var(--accent),#7ee0ff); animation:spin 1.25s linear infinite; box-shadow:0 8px 40px rgba(47,156,255,0.12)}
+    @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+
+    /* Header / nav */
+    header{position:fixed; top:18px; left:50%; transform:translateX(-50%); width:calc(100% - 60px); max-width:1200px; z-index:900; pointer-events:auto}
+    .nav{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:14px; padding:10px 16px; display:flex; align-items:center; justify-content:space-between;
+      box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+      backdrop-filter: blur(6px);
+    }
+    .brand{display:flex; gap:12px; align-items:center;}
+    .logo{
+      width:44px; height:44px; border-radius:10px; display:grid; place-items:center;
+      background:linear-gradient(135deg,var(--accent),#1cc0ff); font-weight:700; color:#02203a;
+      box-shadow: 0 6px 20px rgba(47,156,255,0.12);
+    }
+    .brand h1{font-size:16px; margin:0; letter-spacing:0.2px}
+    nav .links{display:flex; gap:18px; align-items:center}
+    .nav a{color:var(--muted); text-decoration:none; font-weight:600; font-size:14px; padding:8px 12px; border-radius:10px}
+    .nav a:hover{color:#fff; background:var(--glass)}
+
+    /* Hero */
+    .hero{
+      min-height:92vh; display:grid; grid-template-columns: 1fr 420px; gap:48px; align-items:center;
+      max-width:1200px; margin:120px auto 40px; padding:40px;
+    }
+    .hero-left{max-width:760px}
+    .eyebrow{display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.03); color:var(--muted); font-size:13px; margin-bottom:18px}
+    h2{font-size:42px; line-height:1.02; margin:0 0 18px}
+    p.lead{color:var(--muted); font-size:16px; margin-bottom:22px; max-width:700px}
+    .cta{display:flex; gap:12px; align-items:center}
+    .btn{
+      padding:12px 18px; background:linear-gradient(90deg,var(--accent),#1ce0ff); color:#02203a; border-radius:12px; font-weight:700; text-decoration:none;
+      box-shadow: 0 10px 30px rgba(47,156,255,0.12); border:none; cursor:pointer;
+    }
+    .btn.alt{background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04)}
+
+    /* Hero card / image */
+    .hero-right{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius); padding:18px; box-shadow: 0 10px 40px rgba(2,6,23,0.7);
+      display:flex; flex-direction:column; gap:12px; align-items:center;
+    }
+    .profile{
+      width:360px; height:360px; border-radius:14px; overflow:hidden; display:block; flex-shrink:0;
+      box-shadow: 0 18px 50px rgba(2,10,30,0.6);
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    }
+    .profile img{width:100%; height:100%; object-fit:cover; display:block}
+    .profile-meta{display:flex; gap:12px; align-items:center; justify-content:space-between; width:100%}
+    .meta-left{display:flex; gap:10px; align-items:center}
+    .meta-left .name{font-weight:700}
+    .socials{display:flex; gap:10px}
+
+    /* Sections */
+    section{max-width:1200px; margin:40px auto; padding:40px; border-radius:16px}
+    .glass{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02)); box-shadow: 0 8px 30px rgba(0,0,0,0.6); border-radius:16px; padding:28px}
+
+    /* Projects grid */
+    .projects-grid{display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:20px}
+    .project{
+      border-radius:14px; overflow:hidden; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      transform-origin:center; cursor:pointer; transition:transform .35s ease, box-shadow .35s;
+      box-shadow: 0 8px 30px rgba(3,8,20,0.6);
+    }
+    .project img{width:100%; height:180px; object-fit:cover; display:block}
+    .project .body{padding:14px}
+    .project h3{margin:0 0 6px; font-size:18px}
+    .project p{margin:0; color:var(--muted); font-size:14px}
+    .project:hover{transform:translateY(-10px) scale(1.01); box-shadow: 0 20px 60px rgba(47,156,255,0.08)}
+
+    /* About & skills */
+    .flex{display:flex; gap:20px; align-items:center; justify-content:space-between}
+    .skills{display:flex; gap:12px; flex-wrap:wrap}
+    .skill{padding:8px 12px; background:rgba(255,255,255,0.02); border-radius:10px; color:var(--muted); font-weight:600; font-size:13px}
+
+    /* Contact form */
+    form{display:grid; gap:12px}
+    input,textarea{background:transparent; border:1px solid rgba(255,255,255,0.04); padding:12px 14px; border-radius:10px; color:#e6eef6; outline:none}
+    input::placeholder, textarea::placeholder{color:var(--muted)}
+    textarea{min-height:120px; resize:vertical}
+
+    /* Footer */
+    footer{padding:30px; text-align:center; color:var(--muted); font-size:14px}
+
+    /* Responsive */
+    @media (max-width:940px){
+      .hero{grid-template-columns:1fr; margin:110px 20px 20px; padding:28px}
+      .hero-right{order:-1}
+      header{left:20px; transform:none; width:calc(100% - 40px)}
+    }
+    @media (max-width:520px){
+      h2{font-size:28px}
+      .profile{width:300px;height:300px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="spinner" aria-hidden="true"></div>
+  </div>
+
+  <!-- Header / Nav -->
+  <header>
+    <div class="nav">
+      <div class="brand">
+        <div class="logo">DP</div>
+        <div>
+          <h1>Dev Patel</h1>
+          <div style="font-size:12px;color:var(--muted)">Frontend Developer • UI Enthusiast</div>
+        </div>
+      </div>
+      <nav class="links" aria-label="Main Navigation">
+        <a href="#about">About</a>
+        
+        <a href="#contact">Contact</a>
+        
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main class="hero" id="home" role="main" aria-label="Hero">
+    <div class="hero-left">
+      <span class="eyebrow">Hello, I build interfaces</span>
+      <h2 id="intro-title">I'm Dev Patel </h2>
+      <p class="lead">I design and build fast, accessible websites with beautiful motion and clear UX. My stack: HTML, CSS, JS, React, and PHP for backend integrations.</p>
+      <div class="cta">
+        <a href="" class="btn">View Projects</a>
+        <a href="#contact" class="btn alt">Get in Touch</a>
+      </div>
+
+      <!-- Quick stats (animated) -->
+      <div style="display:flex; gap:18px; margin-top:26px; align-items:center">
+        <div style="background:rgba(255,255,255,0.02); padding:12px 16px; border-radius:12px">
+          <div style="font-weight:700; font-size:20px" data-count="3">0</div>
+          <div style="font-size:12px; color:var(--muted)">Projects</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.02); padding:12px 16px; border-radius:12px">
+          <div style="font-weight:700; font-size:20px" data-count="6">0</div>
+          <div style="font-size:12px; color:var(--muted)">Month Experience</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right glass" aria-hidden="true">
+      <div class="profile" id="profile-card">
+        <!-- Replace src with your profile photo -->
+        <img src="dev.jpg" alt="Profile image of Dev Patel">
+      </div>
+
+      <div class="profile-meta" style="width:100%">
+        <div class="meta-left">
+          <div>
+            <div class="name">Dev Patel</div>
+            <div style="font-size:13px;color:var(--muted)">Frontend Developer</div>
+          </div>
+        </div>
+        <div class="socials">
+          <a href="#" title="GitHub" aria-label="GitHub" style="color:var(--muted);text-decoration:none">GH</a>
+          <a href="#" title="LinkedIn" aria-label="LinkedIn" style="color:var(--muted);text-decoration:none">IN</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ABOUT -->
+  <section id="about" class="glass" aria-labelledby="about-heading">
+    <h2 id="about-heading">About Me</h2>
+    <div class="flex" style="margin-top:14px">
+      <div style="flex:1">
+        <p style="color:var(--muted)">I build accessible, performant websites with elegant motion and strong attention to detail. I enjoy converting complex flows into simple and delightful experiences. I collaborate with teams, ship features fast, and keep an eye on performance and accessibility.</p>
+        <div style="margin-top:16px">
+          <strong>Specialties</strong>
+          <div class="skills" style="margin-top:8px">
+            <span class="skill">HTML</span>
+            <span class="skill">CSS / SASS</span>
+            <span class="skill">JavaScript</span>
+            <span class="skill">React</span>
+            
+            <span class="skill">UI Design</span>
+          </div>
+        </div>
+      </div>
+      <div style="width:320px">
+        <!-- small info card -->
+        <div style="background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:18px; border-radius:12px">
+          <div style="font-weight:700; font-size:18px">Availability</div>
+          <div style="color:var(--muted); margin-top:8px">Open for freelancing and full-time roles.</div>
+          <div style="display:flex; gap:8px; margin-top:12px">
+            <a class="btn" href="#contact" style="font-size:13px;padding:8px 12px">Hire me</a>
+            <a class="btn alt" href="#" style="font-size:13px;padding:8px 12px">Download CV</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="glass" aria-labelledby="projects-heading">
+    <h2 id="projects-heading">Selected Projects</h2>
+    <div class="projects-grid" style="margin-top:20px">
+      <!-- Example projects: replace images & text -->
+      <article class="project">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1400&auto=format&fit=crop" alt="Project screenshot">
+        <div class="body">
+          <h3>Enterprise Landing</h3>
+          <p>Official corporate landing page with subtle motion and accessibility-first UI.</p>
+        </div>
+      </article>
+
+      <article class="project">
+        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1400&auto=format&fit=crop" alt="Project screenshot">
+        <div class="body">
+          <h3>Animated Portfolio</h3>
+          <p>Interactive portfolio built with GSAP scroll animations and performant images.</p>
+        </div>
+      </article>
+
+      <article class="project">
+        <img src="https://images.unsplash.com/photo-1508779018996-0d3b2b8af2d0?q=80&w=1400&auto=format&fit=crop" alt="Project screenshot">
+        <div class="body">
+          <h3>Real Estate UI</h3>
+          <p>Map-based property explorer with filtering and a clean detail view.</p>
+        </div>
+      </article>
+
+      <article class="project">
+        <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1400&auto=format&fit=crop" alt="Project screenshot">
+        <div class="body">
+          <h3>Voice Assistant UI</h3>
+          <p>Jarvis-like voice UI built in React with animated listening states and waveforms.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="glass" aria-labelledby="contact-heading">
+    <h2 id="contact-heading">Contact</h2>
+    <div style="display:grid; grid-template-columns:1fr 360px; gap:24px; margin-top:16px">
+      <div>
+        <form id="contact-form" onsubmit="return false;">
+          <input type="text" id="name" placeholder="Your name" required>
+          <input type="email" id="email" placeholder="Email" required>
+          <textarea id="message" placeholder="Tell me about the project..." required></textarea>
+          <div style="display:flex; gap:10px; margin-top:6px">
+            <button class="btn" id="sendBtn">Send Message</button>
+            <button class="btn alt" id="resetBtn" type="reset">Reset</button>
+          </div>
+        </form>
+      </div>
+      <div>
+        <div style="padding:14px; border-radius:12px; background:rgba(255,255,255,0.02)">
+          <div style="font-weight:700">Office</div>
+          <div style="color:var(--muted); margin-top:8px">Vadnagar, Gujarat, India</div>
+          <div style="margin-top:12px; color:var(--muted)">Email: dev@example.com<br>Phone: +91 98765 43210</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © <span id="year"></span> Dev Patel • Built with care & animation
+  </footer>
+
+  <!-- GSAP + ScrollTrigger (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <!-- Script: animations + interactivity -->
+  <script>
+    // small helpers
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+    // Hide preloader after everything is ready
+    window.addEventListener('load', () => {
+      gsap.to('#preloader', {autoAlpha:0, y:-20, duration:0.7, ease:'power2.out', onComplete:() => {
+        document.getElementById('preloader').style.display = 'none';
+      }});
+    });
+
+    // set copyright year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // GSAP default
+    gsap.defaults({duration:1, ease:'power3.out'});
+
+    // Intro sequence
+    const tl = gsap.timeline();
+    tl.from('.nav', {y:-30, autoAlpha:0, duration:0.8});
+    tl.from('.eyebrow', {y:12, autoAlpha:0}, '-=0.4');
+    tl.from('#intro-title', {y:18, autoAlpha:0, duration:0.9}, '-=0.35');
+    tl.from('.lead', {y:12, autoAlpha:0}, '-=0.45');
+    tl.from('.btn', {scale:0.96, autoAlpha:0, stagger:0.08}, '-=0.4');
+    tl.from('#profile-card', {scale:0.96, rotation:2, autoAlpha:0, duration:1}, '-=0.8');
+
+    // Scroll-triggered animations
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Fade-in for each section
+    gsap.utils.toArray('section').forEach(section => {
+      gsap.from(section, {
+        scrollTrigger:{
+          trigger: section,
+          start: 'top 80%',
+        },
+        y: 30, autoAlpha: 0, duration: 0.9
+      });
+    });
+
+    // Projects: staggered reveal + subtle scale on hover (via gsap)
+    gsap.utils.toArray('.project').forEach((card, i) => {
+      gsap.from(card, {
+        scrollTrigger:{trigger: card, start: 'top 85%'},
+        y: 30,
+        autoAlpha:0,
+        duration:0.8,
+        delay: i * 0.08
+      });
+
+      // parallax-like hover tilt
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        gsap.to(card, {rotationX: y * -4, rotationY: x * 6, transformPerspective:800, scale:1.02, duration:0.4});
+      });
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {rotationX:0, rotationY:0, scale:1, duration:0.5});
+      });
+    });
+
+    // Profile subtle parallax on mouse move
+    const profile = $('#profile-card');
+    if(profile){
+      document.addEventListener('mousemove', (e) => {
+        const w = window.innerWidth, h = window.innerHeight;
+        const x = (e.clientX / w - 0.5) * 16;
+        const y = (e.clientY / h - 0.5) * 12;
+        gsap.to(profile, {x: x, y: y, rotation: x * 0.03, duration: 0.9});
+      });
+    }
+
+    // Count up stats when visible
+    function animateCount(el){
+      const target = +el.getAttribute('data-count') || 0;
+      gsap.fromTo(el, {innerText:0}, {
+        innerText: target,
+        duration: 1.6,
+        ease:'power1.out',
+        snap: {innerText:1},
+        onUpdate: function(){ el.textContent = Math.floor(el.innerText); }
+      });
+    }
+    $$('.eyebrow, .btn'); // noop to ensure selectors exist
+    gsap.utils.toArray('[data-count]').forEach((el) => {
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 85%',
+        onEnter: () => animateCount(el),
+        once: true
+      });
+    });
+
+    // Smooth scrolling for nav links
+    $$('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if(!target) return;
+        gsap.to(window, {scrollTo: {y: target, offsetY: 90}, duration:1, ease:'power2.out'});
+      });
+    });
+
+    // Contact form small animation feedback
+    const sendBtn = document.getElementById('sendBtn');
+    if(sendBtn){
+      sendBtn.addEventListener('click', () => {
+        // simple client-side validation
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const msg = document.getElementById('message').value.trim();
+        if(!name || !email || !msg){
+          gsap.fromTo('#sendBtn', {x:-2}, {x:2, duration:0.08, repeat:3, yoyo:true});
+          return;
+        }
+        // micro success animation
+        gsap.to(sendBtn, {y:-6, duration:0.18, ease:'power1.out', onComplete: ()=> {
+          gsap.to(sendBtn, {y:0, duration:0.6, ease:'elastic.out(1,0.6)'});
+        }});
+        sendBtn.textContent = 'Sent ✓';
+        sendBtn.disabled = true;
+      });
+    }
+
+    // Optional: keyboard shortcut to focus contact (press "c")
+    document.addEventListener('keydown', (e) => {
+      if(e.key.toLowerCase() === 'c' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
+        e.preventDefault();
+        document.getElementById('name').focus();
+        gsap.to(window, {scrollTo:{y:'#contact', offsetY:80}, duration:1});
+      }
+    });
+
+  </script>
+</body>
+</html>
